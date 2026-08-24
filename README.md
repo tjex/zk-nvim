@@ -210,8 +210,15 @@ see what they can do, and learn as you go.
 
 [Options (ZkList)](https://zk-org.github.io/zk/tips/editors-integration.html#zk-list)
 
-- `:'<,'>ZkMatch [{options}]`\
-  Opens a notes picker, filtering for notes matching the visual selection.
+- `:ZkMatch [{options}] [{term}]`\
+  Opens a notes picker, filtering for notes matching a search term. The term
+  is resolved in this priority order: an explicit `options.match`, free-text
+  arguments (no quotes needed, e.g. `:ZkMatch my search term`), a visual
+  selection (`:'<,'>ZkMatch`), or — in normal mode with no arguments — the
+  word under the cursor. An `{options}` table (e.g. for `sort`) can be
+  combined with trailing free text, e.g. `:ZkMatch {created_before =
+  "2026-08-24"} my search term`; if it omits a `match` field, the term falls
+  back through free-text/selection/cursor-word as above.
 
 - `:ZkTags [{options}]`\
   Opens a notes picker for selected tags.
@@ -227,6 +234,9 @@ _Examples:_
 :ZkNotes { createdAfter = "3 days ago", tags = { "work" } }
 :'<,'>ZkNewFromTitleSelection " this will use your last visual mode selection. Note that you *must* call this command with the '<,'> range.
 :ZkCd
+:ZkMatch foo bar baz " free-text search, no quotes needed
+:ZkMatch { sort = { "created" } } " options table; falls back to selection/cursor word for the match term
+:ZkMatch {created_before = "2026-08-24"} foo bar " options table combined with free-text match term
 ```
 
 ---
